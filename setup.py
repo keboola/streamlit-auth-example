@@ -4,8 +4,8 @@ with open("README.md", "r") as f:
     long_description = f.read()
 
 setuptools.setup(
-    name='kb_str',
-    version='0.0.2',
+    name='keboola_streamlit',
+    version='0.0.1',
     author="pandyandy",
     #project_urls=project_urls,
     setup_requires=['pytest-runner', 'flake8'],
@@ -19,7 +19,7 @@ setuptools.setup(
         'kbcstorage'
     ],
     author_email='novakovadrea@gmail.com',
-    description='A Python library for working with Kbc SAPI Client.',
+    description='Keboola Streamlit simplifies the use of Keboola Storage API within Streamlit apps, providing easy-to-use functions for authentication, data retrieval, event logging, and data loading.',
     long_description=long_description,
     long_description_content_type="text/markdown",
     package_dir={'': 'src'},
