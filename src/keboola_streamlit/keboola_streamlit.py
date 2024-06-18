@@ -205,7 +205,7 @@ class KeboolaStreamlit:
             if 'tables_data' not in st.session_state:
                 st.session_state['tables_data'] = {}
             if selected_table_id not in st.session_state['tables_data']:
-                st.session_state['tables_data'][selected_table_id] = self.get_data(table_id=selected_table_id)
+                st.session_state['tables_data'][selected_table_id] = self.get_table(table_id=selected_table_id)
             return st.session_state['tables_data'][selected_table_id]
         return pd.DataFrame()
     
