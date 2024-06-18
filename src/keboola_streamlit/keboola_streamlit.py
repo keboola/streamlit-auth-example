@@ -76,7 +76,7 @@ class KeboolaStreamlit:
                 st.error("You are not authorised to use this app.")
                 st.stop()
         else:
-            st.write('Not using proxy')
+            st.write('Not using proxy.')
 
 
     def create_event(self, message: str = 'Streamlit App Create Event', endpoint: str = '/v2/storage/events/create', data: Optional[str] = None, jobId: Optional[int] = None):
@@ -88,8 +88,6 @@ class KeboolaStreamlit:
             message (str): The message for the event.
             data (str): The data associated with the event.
             endpoint (str): The endpoint for the event.
-
-        Displays a success or error message in the Streamlit app.
         """
         headers = self._get_headers()
         url = f'{self.root_url}/v2/storage/events'
@@ -105,7 +103,7 @@ class KeboolaStreamlit:
                 'time': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                 'endpoint': endpoint,
                 'event_type': 'keboola_data_app_write',
-                'event_application': headers['Origin']
+                'event_application': headers.get('Origin', 'Unknown')
             }
         }
         
@@ -116,12 +114,8 @@ class KeboolaStreamlit:
             requestData['params']['event_job_id'] = jobId
 
         response = requests.post(url, headers=requestHeaders, json=requestData)
-
-        if response.status_code == 201:
-            st.success('Event sent.')
-        else:
-            st.error(f'Error: {response.status_code} - {response.text}')
-            
+        return response.status_code, response.text
+    
     def get_event_job_id(self, table_id: str, operation_name: str):
         client = self._get_sapi_client()
         job_list = client.jobs.list()
@@ -132,7 +126,7 @@ class KeboolaStreamlit:
                 break
         return job_id
     
-    def get_data(self, table_id: str, endpoint: str = '/v2/storage/tables/export_to_file') -> pd.DataFrame:
+    def get_table(self, table_id: str, endpoint: str = '/v2/storage/tables/export_to_file') -> pd.DataFrame:
         """
         Retrieves data from a Keboola Storage table and returns it as a Pandas DataFrame.
 
@@ -163,7 +157,7 @@ class KeboolaStreamlit:
             event_job_id = self.get_event_job_id(table_id=table_id, operation_name='tableExport')
             self.create_event(
                 jobId=event_job_id, 
-                message='Streamlit App Download Data', 
+                message='Streamlit App Download Table', 
                 endpoint=endpoint
             )
             return df
@@ -172,7 +166,7 @@ class KeboolaStreamlit:
             return pd.DataFrame() 
 
 
-    def load_data(self, table_id: str, df: pd.DataFrame, is_incremental: bool = False, endpoint: str = '/v2/storage/tables/load'):
+    def load_table(self, table_id: str, df: pd.DataFrame, is_incremental: bool = False, endpoint: str = '/v2/storage/tables/load'):
         """
         Load data into an existing table.
 
@@ -181,8 +175,6 @@ class KeboolaStreamlit:
             df (pd.DataFrame): The DataFrame containing the data to be loaded.
             is_incremental (bool): Whether to load incrementally (do not truncate the table). Defaults to False.
             endpoint (str): The endpoint for loading data.
-
-        Displays a success or error message in the Streamlit app.
         """
         client = self._get_sapi_client()
         csv_path = f'{table_id}.csv'
@@ -192,7 +184,7 @@ class KeboolaStreamlit:
             event_job_id = self.get_event_job_id(table_id=table_id, operation_name='tableImport')
             self.create_event(
                 jobId=event_job_id, 
-                message='Streamlit App Load Data', 
+                message='Streamlit App Load Table', 
                 endpoint=endpoint,
                 data=df
             )
@@ -202,7 +194,7 @@ class KeboolaStreamlit:
             if os.path.exists(csv_path):
                 os.remove(csv_path)
 
-    def add_keboola_table_selection(self):
+    def add_table_selection(self):
         self._add_connection_form()
         if 'kbc_storage_client' in st.session_state:
             self._add_bucket_form()

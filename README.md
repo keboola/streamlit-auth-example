@@ -1,6 +1,6 @@
 # KeboolaStreamlit
 
-KeboolaStreamlit is a Python package that facilitates the integration of Streamlit applications with the Keboola Storage API. It provides various functionalities for authentication, data retrieval, event creation, and data loading in a Keboola environment.
+Keboola Streamlit simplifies the use of Keboola Storage API within Streamlit apps, providing easy-to-use functions for authentication, data retrieval, event logging, and data loading.
 
 ## Installation
 
@@ -35,7 +35,7 @@ keboola.auth_check(required_role_id='YOUR_REQUIRED_ROLE_ID')
 Fetch data from a Keboola Storage table and return it as a Pandas DataFrame:
 
 ```python
-df = keboola.get_data(table_id='YOUR_TABLE_ID')
+df = keboola.get_table(table_id='YOUR_TABLE_ID')
 ```
 
 ### Load Data
@@ -43,7 +43,7 @@ df = keboola.get_data(table_id='YOUR_TABLE_ID')
 Load data from a Pandas DataFrame into a Keboola Storage table:
 
 ```python
-keboola.load_data(table_id='YOUR_TABLE_ID', df=your_dataframe, is_incremental=False)
+keboola.load_table(table_id='YOUR_TABLE_ID', df=your_dataframe, is_incremental=False)
 ```
 
 ### Create Event
@@ -51,7 +51,7 @@ keboola.load_data(table_id='YOUR_TABLE_ID', df=your_dataframe, is_incremental=Fa
 Create an event in Keboola Storage to log activities:
 
 ```python
-keboola.create_event(message='Your event message')
+keboola.create_event()
 ```
 
 ### Add Keboola Table Selection
@@ -59,7 +59,7 @@ keboola.create_event(message='Your event message')
 Add a Keboola table selection form to your Streamlit app sidebar:
 
 ```python
-selected_table_data = keboola.add_keboola_table_selection()
+selected_table_data = keboola.add_table_selection()
 ```
 
 ## License
