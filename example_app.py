@@ -23,7 +23,7 @@ table_id = st.text_input("Table ID")
 
 submitted_get = st.button("Submit")
 if submitted_get:
-    df = kst.get_data(table_id)
+    df = kst.get_table(table_id)
     if not df.empty: 
         st.dataframe(df,use_container_width=True)
         st.session_state['data'] = df
@@ -33,11 +33,11 @@ if submitted_get:
 submitted_load = st.button("Load")
 if submitted_load:
     if 'data' in st.session_state and not st.session_state['data'].empty:
-        kst.load_data(table_id, st.session_state['data'])
+        kst.load_table(table_id, st.session_state['data'])
 else:
     st.error("No data available to load.")
 
-st.session_state['uploaded_file'] = kst.add_keboola_table_selection()
+st.session_state['uploaded_file'] = kst.add_table_selection()
 
 if not st.session_state['uploaded_file'].empty:
     st.dataframe(st.session_state['uploaded_file'], use_container_width=True)
